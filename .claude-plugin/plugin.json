@@ -1,6 +1,6 @@
 {
   "name": "evidence-first-app-builder",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Build apps docs-first: feature planning, FigCraft design, evidence checklists, then code.",
   "license": "MIT"
 }
