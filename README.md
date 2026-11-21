@@ -20,6 +20,20 @@ The skill is at [`skills/evidence-first-app-builder/SKILL.md`](skills/evidence-f
 
 ## What's inside
 
+```text
+skills/evidence-first-app-builder/
+  SKILL.md                 Method, phases and docs-and-design gate
+  references/              Folder structure and per-phase output contracts
+  templates/               Ten fill-in planning, design and proof artifacts
+  examples/                One fictional feature gate and journey manifest
+```
+
+Start with the [bundle index](skills/evidence-first-app-builder/SKILL.md#bundle-files).
+Use the [folder map](skills/evidence-first-app-builder/references/folder-structure.md)
+to place files and the [output tables](skills/evidence-first-app-builder/references/outputs.md)
+to decide when they are ready. The [worked example](skills/evidence-first-app-builder/examples/offline-ledger.md)
+separates a passed design gate from still-unproven runtime behavior.
+
 | Section | Covers |
 |---|---|
 | Docs-and-design gate | What must exist before any feature code |

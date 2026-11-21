@@ -9,11 +9,21 @@ A step-by-step method for taking an app from idea to release-ready. It covers re
 
 The method is fixed. The stack is not. Choose the stack from the requirements (section 3).
 
+## Bundle files
+
+- [Folder structure](references/folder-structure.md): destinations, naming and stack variants (sections 2-3).
+- [Outputs and acceptance](references/outputs.md): artifact contracts for every phase and gate (section 4).
+- Planning templates: [build plan](templates/build-plan.md), [feature study](templates/feature-study.md), [ADR](templates/adr.md), [competitor study](templates/competitor-study.md) (section 5).
+- Design templates: [direction](templates/design-direction.md), [handoff](templates/handoff.md), [journey JSON](templates/app-journey.json) (section 9).
+- Proof templates: [checklist](templates/checklist.md), [testing guide](templates/testing-guide.md), [release checklist](templates/release-checklist.md) (sections 6-7 and phases 7-8).
+- [Worked feature gate](examples/offline-ledger.md) and [journey example](examples/offline-ledger-journey.json): compact fictional records, with runtime gaps left explicit.
+
 **The heart of the method is docs and design before execution.** Most of the value comes from three things done before code: planning the features (section 5), building the design file in FigCraft (section 9), and writing the handoff that ties every screen to real logic. Code is the last step of a feature, not the first.
 
 ## The docs-and-design gate (hard rule)
 
 No feature code is written until, for that feature:
+
 1. It has an F-id in a feature study with what, why, how, options with licences, the module it lands in, its interface, and its test recipe (5.7).
 2. It is in the priority matrix and the checklist with a step number (5.8, 7).
 3. It has a row in the feature -> screen -> calls map, its journeys, and its states (9.2).
@@ -43,6 +53,8 @@ Do not use for one-off scripts, or for a repo with its own established conventio
 10. **Atomic semantic commits.** One concern per commit, conventional prefix with a scope, plain subject, a body that says why. Every code commit passes format, lint and tests.
 
 ## 2. Repository layout
+
+Use the folder-structure reference in Bundle files for naming rules and stack-specific trees.
 
 Adapt names to the stack. Keep the roles.
 
@@ -75,6 +87,7 @@ Write the requirements, then pick. Typical outcomes:
 | Desktop tool | Single binary preferred, zero install |
 
 Rules for the decision:
+
 - List candidates with licence, binary size, speed, accuracy, team skill, build complexity.
 - Spike the riskiest candidate on every target before accepting (section 4, phase 1).
 - If a shared native core is chosen: generated bindings only (no hand-written glue), one runtime per process for heavy engines, and package tests on each platform.
@@ -82,9 +95,12 @@ Rules for the decision:
 
 ## 4. Phases, step by step
 
+Use the outputs reference in Bundle files as the acceptance contract for each phase.
+
 Each phase ends with its docs and checklist ticks committed.
 
 ### Phase 0. Brief and research (docs only)
+
 1. `docs/00-platform-approach.md`: options per platform, dated constraints found.
 2. `docs/01-competitor-study.md`: table *App | Free tier | Paid | Paywalled*. Per competitor: Features, Complaints (from reviews), **Take**, **Skip**. End with "Our position".
 3. `docs/02-core-approach.md`: candidates for the hard part, compared on licence, size, speed, accuracy.
@@ -92,50 +108,62 @@ Each phase ends with its docs and checklist ticks committed.
 5. Feature studies (`04-`, `06-`, ...): F-numbered features with what/why, module, function signatures, algorithm, interface shape, licence of any model, and **one test recipe per feature** (section 6).
 
 ### Phase 0b. Feature planning and design (before any feature code)
+
 - Feature studies, priority matrix and checklist (sections 5.7, 5.8, 7).
 - Design study, direction, feature -> screen map, journeys, states, IX, then the FigCraft file, critique, accessibility pass and handoff (section 9).
 - Product plan and free/paid boundary early, because it changes screens (phase 6 notes).
 - A design stage is done when another agent could build the apps from the file and the handoff without asking questions.
 
 ### Phase 1. Spike the unknowns
+
 - Prove the riskiest thing end to end on every target (desktop, iOS simulator, Android emulator, browser) before building more.
 - Write `docs/spikes/s0-<topic>.md` (template in 5.4).
 - Write ADR 0001 from what the spike proved.
 
 ### Phase 2. Fundamentals as vertical slices
+
 - Write the plan file (template in 5.2) and the master checklist (section 7).
 - First commits: `chore(repo)` gitignore, `chore(tools)` pinned asset fetch, `feat(core)` first modules, `feat(cli)` desktop runner, `feat(bindings)` if any, `chore(eval)` scorer, `chore(mobile)` device proof, then docs.
 
 ### Phase 3. Improve with measurement
+
 - Baseline report first. Then candidate vs baseline with explicit gates (e.g. "golden exact, errors no worse, device time at most 2x").
 - Sweep thresholds, pin the chosen value in config, add a test that pins it. Record surprises as **Found** and limits as **Gap**.
 
 ### Phase 4. Capabilities, one slice per feature
+
 - Repeat the slice recipe (section 6) in checklist order.
 - Cut scope on purpose. The owner sets scope. Deferred steps move to the next checklist with their number, never silently dropped.
 
 ### Phase 5. Packaging
+
 - Package the core for each app with tests that call every new public entry on the simulator, emulator or browser.
 - Optional add-ons (third-party SDKs, extra models) ship as separate packages.
 
 ### Phase 6. Product, monetisation, design
+
 - Product plan: "Recommendation in one page" first, then tiers, prices, trial, and what is never paywalled. The free/paid boundary lives in `contract/features.json`.
 - Sensible defaults: generous free core, no ads, no watermark, no forced account, yearly + lifetime plans, a trial reminder before charging, no dark patterns.
 - Extend the design file with new pages for new feature groups (section 9.7), never by redrawing old pages.
 
 ### Phase 7. App spec and platform checklists
+
 - `docs/app-spec.md`: v1 allowlist *Ships in v1 | Later*, feature IDs, screens and routes, content model, purchase recovery, telemetry (consent-based, error taxonomy), security, architecture, build environments (staging, production), accessibility and localisation, test gates, platform parity rules, open items.
 - Per platform: README, architecture diagram (UI, domain, data, core), build variants, telemetry setup, running-and-testing.
 - `CHECKLIST-<PLATFORM>.md` per platform with the same meaning per step. Never copy a tick across platforms. `CHECKLIST-RELEASE.md` is the go/no-go with evidence for every platform.
 - App architecture default: UI, then domain use cases, then repositories, then data adapters and the core. Presentation calls use cases only. Domain imports no platform or vendor SDK. Errors are mapped once at the data boundary. About 80% coverage on domain, data and presentation logic.
 
 ### Phase 8. Apps
+
 - Build each screen from its handoff frame, in checklist order, against the real core.
 - A step is done when it works on simulator or emulator, in every launch language, light and dark, with screen-reader labels, and its states match the design.
 
 ## 5. Planning in depth
 
 ### 5.1 Planning documents in order
+
+Start from the planning templates in Bundle files, then fill them with dated evidence.
+
 | Doc | Purpose | Must contain |
 |---|---|---|
 | Platform approach | Options | options x constraints, dated facts, recommendation |
@@ -148,7 +176,8 @@ Each phase ends with its docs and checklist ticks committed.
 | App spec | Ship scope | allowlist, routes, content model, recovery, telemetry, security, parity, gates |
 
 ### 5.2 Plan file template (`docs/plans/YYYY-MM-DD-<topic>.md`)
-```
+
+```text
 # <Topic> Implementation Plan
 > Implement task by task with TDD (failing test first, then the smallest pass),
 > prove each task with a fresh verification run, and commit atomically.
@@ -178,9 +207,11 @@ Each phase ends with its docs and checklist ticks committed.
 - [ ] Step 4: run, expect PASS, then format and lint
 - [ ] Step 5: commit `feat(scope): ...`
 ```
+
 Rules: one commit per task. Each task names exact types so later tasks can consume them. Code in the plan is complete, never "...". Acceptance is a command with expected output.
 
 ### 5.3 Sharpened brief (section 0 of the build plan)
+
 1. What a top team would add that was not asked for (a scorer, a fallback, a privacy gate).
 2. Raw material to start from (datasets, models, open-source code, with licences).
 3. Methods and tools (named algorithms, libraries, pinned versions).
@@ -188,10 +219,12 @@ Rules: one commit per task. Each task names exact types so later tasks can consu
 5. The request rewritten as a precise spec.
 
 ### 5.4 Spike template (`docs/spikes/sN-<topic>.md`)
+
 Question. Setup (versions, devices). Table *Check | Result | Evidence*. Timings labelled desktop, simulator, device. Sizes. Findings that shape the code. Decision, with the ADR link.
 
 ### 5.5 ADR template (`docs/adr/NNNN-<slug>.md`)
-```
+
+```text
 # NNNN. <Decision as a sentence>
 Status: Proposed | Accepted by <owner> on YYYY-MM-DD | Superseded by NNNN
 ## Context       forces, constraints, numbers
@@ -200,15 +233,18 @@ Status: Proposed | Accepted by <owner> on YYYY-MM-DD | Superseded by NNNN
 ## Evidence      spike, benchmark, links
 ## Consequences  what gets easier, harder, what we must now do
 ```
+
 Typical ADRs: stack and architecture, storage, telemetry, monetisation, each model or library with a licence question. A rejected option gets a note in `docs/research/<step>-<topic>.md` (gap, options, decision, revisit when).
 
 ### 5.6 Scoping with the owner
+
 - Propose, do not ask open questions. Give a recommendation and 2-3 options.
 - Record the owner's call with the date in the checklist gate rules.
 - Mark steps that need the owner (a decision, a device, an account) as `(owner)`.
 
 ### 5.7 Feature study format (one section per feature)
-```
+
+```text
 ### F<n>. <Feature name>: <sub-features>
 - **What:** what the user sees and does (observed in competitors, or specified).
 - **How:** how others do it, with sources (papers, engineering blogs, docs).
@@ -222,7 +258,9 @@ Typical ADRs: stack and architecture, storage, telemetry, monetisation, each mod
 - **Accuracy and tests:** metric, new fixture group, sequence tests.
 - **Phase:** where it lands in the checklist, and what it waits on.
 ```
+
 Before the feature list, the study states the boundaries that shape every feature:
+
 - **Offline and size budget**: what runs on device, the bundled budget, the optional pack budget, measured sizes of candidate models.
 - **Platform limits**: store size limits, background limits, packaging rules.
 - **Core boundary**: the core returns data and codes; every interaction, string and permission is the app's.
@@ -230,24 +268,29 @@ Before the feature list, the study states the boundaries that shape every featur
 - **Data model**: e.g. one original plus reversible edits, so every edit can be undone and re-rendered.
 
 ### 5.8 Priority matrix and phases
+
 | Feature | User value | Effort | Risk | Model/licence | Depends on | Phase |
+
 - Rank by value over effort, with risk and licence as blockers.
 - Group into phases (C1, C2, ...) that each ship something testable.
 - The matrix decides the checklist order. Record the owner's scope call next to it.
 
 ### 5.9 Build guide (after the matrix)
+
 - Module map: path -> responsibility for every new module.
 - Port contracts written out as real signatures.
 - Per phase: data flow, algorithm steps, edge cases, test fixtures, and the exact public calls the design will name.
 - The design's "core calls" column must use these exact names.
 
 ### 5.10 Market, behaviour and form-factor study
+
 - Competitors **per region**, not one global list. Many categories are regional (local leaders, clones, OS built-ins). Table *Region | App | Maker country | Positioning | Take | Leave*.
 - Consumer behaviour per market in scope: what people actually do (batch size, share vs store, the chat app they share to, local payment rails, paper sizes, legal document formats). Each rule cites a source and a date.
 - Form factors: phone, tablet (split view / supporting pane, no stretched phone UI), foldables (cover screen = quick actions only, half-open mode, state survives fold and unfold), desktop (pointer hover, keyboard, resizable windows). Decide per form factor: ship, adapt or out of scope.
 - Findings go into the direction doc as decisions (*country variants*, *form-factor rules*), then into new feature, screen and journey rows. Research that changes nothing is cut.
 
 ### 5.11 Naming and store listing (owner decides)
+
 1. **Shortlist 3-5 names**: easy to hear on a call, easy to spell, two syllables is ideal, meaning in the home market and neutral elsewhere. Check each against the app stores, domains and trademarks. Drop any that collide or that borrow a competitor's mark.
 2. **Competitor naming patterns**: table *App | Store name | Pattern* (literal, brand + keyword, keyword-first). Note what the top results actually use.
 3. **Keyword research**: table *Keyword | Searches/mo | Difficulty | Note*, with the source tool and date. Find the head keyword and the open, low-difficulty niches.
@@ -257,6 +300,7 @@ Before the feature list, the study states the boundaries that shape every featur
 ## 6. Vertical slice recipe (every core feature)
 
 A feature is done only when all of these exist:
+
 1. **Module** with table-driven unit tests.
 2. **Fixtures**: a generator script writes deterministic inputs and `truth.json`. Two runs give the same hash. Real samples come from permissively licensed sets, pinned and gitignored.
 3. **Metric and gate** in the evaluation tool, with a threshold flag. Outputs are read back by an independent tool where one exists (a separate parser, validator or renderer).
@@ -267,7 +311,8 @@ A feature is done only when all of these exist:
 8. **Checklist tick** with evidence: test counts, commands, numbers, commit SHAs, gaps.
 
 Commit order for one slice:
-```
+
+```text
 feat(core): parse receipts into items, charges and a checked total
 feat(cli): parse receipts from images or json with the dev cli
 feat(bindings): expose receipt parsing with amounts as decimal strings
@@ -280,7 +325,7 @@ docs(checklist): tick the receipt step with the gate results
 
 ## 7. Checklist format
 
-```
+```text
 # Master checklist: <from X to Y>
 
 This file is the completion contract for the project.
@@ -297,6 +342,7 @@ This file is the completion contract for the project.
 - [x] **7.** <what>. Evidence: <numbers, commands, files>. **Found:** <surprise>. **Gap:** <limit>.
 - [ ] **13.** <what> (**Deferred**). Moved to `CHECKLIST-2.md` step 72.
 ```
+
 - Continue in `CHECKLIST-2.md` when scope grows. Tag steps by layer (core, sdk, tools, adr, design, ios, android, web, owner).
 - Country or legal rules cite an official source and a date. Say "compliant" only with validator evidence.
 - Every market or locale in scope is covered by every feature that has locale rules.
@@ -308,7 +354,7 @@ This file is the completion contract for the project.
 - Subject: lowercase, imperative, describes the user-visible capability, about 60 characters, at most 72, no trailing period. Example: `feat(pdf): compress pdfs by preset or target size without growing them`.
 - Body on most commits: 1-3 short paragraphs on why and the non-obvious facts. Example:
   > /Annots may be an indirect array. Reading it directly saw nothing and replaced the form widgets with the new stamps. It is now read through the reference.
-- A follow-up fix names the commit it fixes, and the cause: "The type_complexity lint failed on the table in <sha>. A head pipe hid the failing exit code."
+- A follow-up fix names the commit it fixes, and the cause: "The type_complexity lint failed on the table in `<sha>`. A head pipe hid the failing exit code."
 - Keep commits small (median about 2 files). Split a big working tree with a commit plan first: numbered *subject - files*, plus a "Not staged" list.
 - Commits carry the human author. No bot co-author trailers unless the owner wants them.
 - Never trust a piped or truncated gate. Check the real exit code.
@@ -320,7 +366,9 @@ This file is the completion contract for the project.
 FigCraft is the design source of truth: an editable native design file driven through the FigCraft MCP or app, with variables, styles, components, frames and prototype links. The same structure works in Figma if FigCraft is not available.
 
 ### 9.1 Study first, draw last (written in `design/00-direction.md`)
+
 Write findings under "What the references taught", one numbered subsection per step:
+
 1. **Method**: the design method and how it will be applied. Take the method, not another project's style.
 2. **Own product docs**: feature studies, architecture, the public interface, pack and unavailable states. List every capability the design must serve.
 3. **Reference screenshots**: per screenshot, what works and what to leave. References teach craft. Never copy a competitor's logo, layout or look.
@@ -328,6 +376,7 @@ Write findings under "What the references taught", one numbered subsection per s
 5. **Platform guidance**: HIG and Material 3 rules that bind the design (camera, sheets, Dynamic Type, back, safe areas). Note where the two apps should differ.
 
 Then write **Direction** as decisions before any drawing:
+
 - One-sentence direction and 4-6 visual principles.
 - Anti-patterns rejected in review (e.g. a colour reserved for one signal used elsewhere, dense plain lists, overlapping cards).
 - Tokens table for Light and Dark with **computed contrast** next to each text pair.
@@ -335,6 +384,7 @@ Then write **Direction** as decisions before any drawing:
 - Market and form-factor rules from 5.10 (country variants, tablet, foldable, desktop) that change layouts.
 
 ### 9.2 Features, screens and journeys (written before drawing)
+
 - **Feature -> screen -> calls map**:
 
 | Feature | Screen ids | Core calls |
@@ -342,6 +392,7 @@ Then write **Direction** as decisions before any drawing:
 | Capture with live outline | S2 Camera, S2a no page, S2b low light | `detectPage` per frame, `measureSharpness` |
 
 Every capability in scope has a screen or a state. Every screen names the exact calls it uses (from the build guide, 5.9). Screen ids are short and stable (S0, S1, S1e, S2a ...).
+
 - **Journeys**: J-ids with path and taps to done:
 
 | # | Journey | Path | Taps to done |
@@ -349,10 +400,12 @@ Every capability in scope has a screen or a state. Every screen names the exact 
 | J2 | Main job | S2 -> S4 Keep -> S5 -> Share | 3 |
 
 Always include first launch with permissions, the main job, a fix-a-mistake path, every optional pack download, offline with everything working, and permission denied with a working alternative.
+
 - **States for every screen**: empty, loading/progress, success, partial, error with retry, offline, permission denied, pack unavailable, locked (paid), cancelled, recovery, and domain states (low light, blurry, hard input).
 - **Interaction spec (IX)** table: *Moment | Interaction | Motion | Reduce Motion | Haptic | VoiceOver / TalkBack*. Give real numbers (durations in ms, scale, spring) and the exact announcement text.
 
 ### 9.3 FigCraft file structure (one page per concern)
+
 | Page | Content |
 |---|---|
 | 00 Cover | Name slot, one-sentence direction, principles, anti-patterns, any naming warning |
@@ -368,6 +421,7 @@ Always include first launch with permissions, the main job, a fix-a-mistake path
 | Z Before refresh | Editable old versions of rebuilt screens, kept as reference |
 
 ### 9.4 Building the file, step by step (each step is a checklist step)
+
 1. Cover and direction.
 2. Tokens: create the variable collections and modes first. No raw hex in frames; every colour, text style, spacing and radius is a variable or style with a code name.
 3. Components: build each control once with properties, then use instances everywhere.
@@ -384,8 +438,15 @@ Always include first launch with permissions, the main job, a fix-a-mistake path
 Evidence for each tick names the page, frame ids, counts (e.g. "19 iPhone frames, 2 Android frames, 23 icons, 24 components") and the preview file.
 
 ### 9.5 Wired journey page and manifest (for review and for AI edits)
+
 - One page (V) holds a connected copy of every state, grouped (launch, home, capture, tools, settings, paid, recovery), with a review launcher that jumps to any state. Original boards stay as references.
 - `design/APP-JOURNEY.json` is the machine-readable manifest:
+
+The bundle template uses camelCase keys, multiple `pages`, and journey-key route
+references. The compact legacy shape below uses snake_case and numeric node
+references. Choose one shape per project, document it and validate references
+consistently. Do not mix their route ID spaces.
+
 ```json
 {
   "page_id": 0, "page_name": "V App journey",
@@ -401,6 +462,7 @@ Evidence for each tick names the page, frame ids, counts (e.g. "19 iPhone frames
   "native_handoffs":   [{"screen": "J116", "action": "", "behavior": "native picker, cancel returns"}]
 }
 ```
+
 - `design/APP-JOURNEY.md` explains main paths, rules for AI edits, scope counts and prototype limits.
 - Rules for edits: edit the V copy, keep keys and node ids stable, add new states with new keys (never renumber), revalidate parent/child integrity, route destinations, reachability and preserved sources after every edit.
 - Asynchronous results (progress -> result) are not tappable successes. Record them in `async_transitions`. OS pickers, permissions and store sheets go in `native_handoffs`.
@@ -409,6 +471,7 @@ Evidence for each tick names the page, frame ids, counts (e.g. "19 iPhone frames
 - After each pass, export the previews and open them for the owner. Do not just list file paths.
 
 ### 9.6 Handoff doc (`design/HANDOFF.md`)
+
 - Header: display name, app id, date, "read with" links, the file path, previews path, and "build from these frames, do not redraw them".
 - Pages table.
 - Prototype: flow starts and a table of wired taps *Tap | Goes to*.
@@ -416,15 +479,18 @@ Evidence for each tick names the page, frame ids, counts (e.g. "19 iPhone frames
 - Components and tokens with code names, accessibility notes, and **open items / known gaps**.
 
 ### 9.7 Extending the design for new features
+
 - Add a section to the direction doc: markets and country variants, free/paid boundary in the UI, new feature -> screen -> calls rows, new journeys continuing the J numbering, states for every new screen, IX additions, form factors.
 - Add one FigCraft page per feature group with its own preview. Country variants are separate frames.
 - Visual refreshes keep the old screens on a "before" page and record the decisions in an audit doc (`UI-UX-AUDIT.md`: verdict, competitor principles with sources, file organisation, visual decisions).
 - Coverage audit (`UI-COVERAGE.md`): what the file covers, gaps filled per pass as *Area | New or rebuilt UI*, and what a prototype cannot prove.
 
 ### 9.8 Brand
+
 **Strategy first.** Before any mark, write: category, audience, product action, emotional promise, trust level, the core metaphor, and what the brand must avoid. Every symbol traces back to this. Never pick symbols at random.
 
 **Logo concept methods** (use one, or combine two at most):
+
 | Method | Idea | Example |
 |---|---|---|
 | Monogram + meaning | Initial shaped by a metaphor through cuts, folds or negative space | a letter folded from one strip of paper |
@@ -444,6 +510,7 @@ Avoid: generic bolts and sparkles, random animals, fake crests, clipart, look-al
 Once chosen, apply the name and identity everywhere in the same pass (file, direction, handoff, product strings). Inspiration studies are tables *App | What it does | Take | Leave* with source and date.
 
 ### 9.9 Design guardrails
+
 - The design file is the single source of truth. Edit the canonical file, reopen it after outside edits, regenerate previews.
 - A prototype route or a polished frame is not runtime evidence. Label it "design artifact, not a working app".
 - Previews rendered with fallback fonts do not verify platform fonts. Mark those checks unverified until rendered on the target.
@@ -454,13 +521,16 @@ Once chosen, apply the name and identity everywhere in the same pass (file, dire
 - Never use a competitor's name or trademark for the product, even as a long-lived codename in shipped strings.
 
 ### 9.10 Design to app bridge
+
 - Each screen implements one handoff frame. Journey keys become route names and test tags.
 - Tokens are exported to code, never retyped.
 - App checklist steps cite the frame id and a screenshot per theme and language.
 - Design commits use scopes like `docs(design)`, `feat(design)`, `fix(design)`, `feat(figcraft)`, `feat(brand)`, e.g. `docs(design): map each screen to its states and core calls in the handoff`, `fix(design): raise tertiary text contrast to 4.5 to 1 in both modes`.
 
 ### 9.11 Web surface: responsive, i18n and SEO
+
 For a marketing site or a web app:
+
 - **Responsive matrix**: test widths from 280 px (flip phone) through 320, 768 and 1024 px to 1440 px, plus short landscape and unfolded foldables. Look for clipping, overlapping two-column breakpoints, nested scrollbars, and touch targets. State survives resize and rotation. Browser emulation is not hardware: say that hinges, notches and GPU still need a device check.
 - **i18n is more than a translated menu**: translated content, a localized crawlable URL per page (keep the existing default-language URLs), a real RTL document for RTL languages, a language chooser that keeps the page, query and anchor, and focus that returns to the trigger. No fixed heights, so longer languages can expand. Validate message keys and ICU format in CI. Machine-drafted translations are flagged for review by a native speaker.
 - **SEO**: a short title, and a meta description whose main message comes before truncation. Per-page metadata, canonical URLs, `hreflang` alternates, structured data (organisation or site name, web page), a sitemap with stable last-modified dates, and checks for duplicate metadata and broken internal links. Translate the title and description per locale.
@@ -469,6 +539,7 @@ For a marketing site or a web app:
 ## 9b. Iterating with the owner
 
 The loop that turns docs into a product the owner likes:
+
 1. **Audit first, no edits**: hierarchy, mobile, accessibility, navigation, conversion path. Return findings ranked by impact.
 2. **Options with trade-offs**: for an open idea, give 2-3 directions in a table *Direction | Interaction | Trade-off* and a recommendation. Ask which one before building.
 3. **Branch, build the first slice, run a preview** the owner can open and try. Tell them exactly what to try and what feedback you want.

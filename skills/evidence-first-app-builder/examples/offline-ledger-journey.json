@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "product": "Pocket Ledger (fictional)",
+  "canonicalSource": "design/figcraft/pocket-ledger.figcraft",
+  "pages": [{"id": "P1", "nodeId": 100, "name": "Canonical journey"}],
+  "screens": [
+    {"id": "J001", "screenId": "S1", "pageId": "P1", "nodeId": 101, "darkNodeId": 201, "name": "Add expense", "state": "editing", "featureId": "F01"},
+    {"id": "J002", "screenId": "S1", "pageId": "P1", "nodeId": 102, "darkNodeId": 202, "name": "Saving", "state": "pending", "featureId": "F01"},
+    {"id": "J003", "screenId": "S2", "pageId": "P1", "nodeId": 103, "darkNodeId": 203, "name": "Expense saved", "state": "success", "featureId": "F01"},
+    {"id": "J004", "screenId": "S1", "pageId": "P1", "nodeId": 104, "darkNodeId": 204, "name": "Save failed", "state": "error", "featureId": "F01"}
+  ],
+  "flows": [{"id": "F01-save", "start": "J001", "name": "Save expense offline"}],
+  "routes": [
+    {"from": "J001", "controlNodeId": 111, "action": "Save valid draft", "to": "J002"},
+    {"from": "J004", "controlNodeId": 114, "action": "Retry preserved draft", "to": "J002"}
+  ],
+  "asyncTransitions": [
+    {"from": "J002", "to": "J003", "outcome": "Atomic storage commit succeeded", "prototype": "Review-only result"},
+    {"from": "J002", "to": "J004", "outcome": "Storage unavailable", "prototype": "Review-only result"}
+  ],
+  "nativeHandoffs": [
+    {"screen": "J002", "action": "Persist expense", "owner": "Platform storage adapter", "success": "J003", "failure": "J004", "cancel": "J001", "resume": "Reconcile operation ID before retry"}
+  ],
+  "runtimeGaps": ["Fictional design gate only. Persistence, interruption recovery and device behavior remain unimplemented."]
+}

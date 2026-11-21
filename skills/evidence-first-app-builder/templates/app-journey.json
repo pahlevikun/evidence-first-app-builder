@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "product": "<Product>",
+  "canonicalSource": "design/figcraft/<product>.figcraft",
+  "pages": [{"id": "P1", "nodeId": 100, "name": "Canonical journey"}],
+  "screens": [
+    {"id": "J001", "screenId": "S1", "pageId": "P1", "nodeId": 101, "darkNodeId": 201, "name": "Add entry", "state": "editing", "featureId": "F01"},
+    {"id": "J002", "screenId": "S1", "pageId": "P1", "nodeId": 102, "darkNodeId": 202, "name": "Saving", "state": "pending", "featureId": "F01"},
+    {"id": "J003", "screenId": "S2", "pageId": "P1", "nodeId": 103, "darkNodeId": 203, "name": "Entry saved", "state": "success", "featureId": "F01"},
+    {"id": "J004", "screenId": "S1", "pageId": "P1", "nodeId": 104, "darkNodeId": 204, "name": "Save failed", "state": "error", "featureId": "F01"}
+  ],
+  "flows": [{"id": "F01-save", "start": "J001", "name": "Save a local entry"}],
+  "routes": [
+    {"from": "J001", "controlNodeId": 111, "action": "Submit valid entry", "to": "J002"},
+    {"from": "J004", "controlNodeId": 114, "action": "Retry with preserved draft", "to": "J002"}
+  ],
+  "asyncTransitions": [
+    {"from": "J002", "to": "J003", "outcome": "Storage commit succeeded", "prototype": "Review-only outcome, not tappable success"},
+    {"from": "J002", "to": "J004", "outcome": "Storage commit failed", "prototype": "Review-only outcome"}
+  ],
+  "nativeHandoffs": [
+    {"screen": "J002", "action": "Commit entry", "owner": "Platform storage adapter", "success": "J003", "failure": "J004", "cancel": "J001", "resume": "Reconcile operation ID before retry, never duplicate"}
+  ],
+  "runtimeGaps": ["Template only. Node IDs are examples. Storage, interruption recovery and platform behavior require implementation and tests."]
+}
