@@ -1,4 +1,11 @@
-# evidence-first-app-builder
+<!-- markdownlint-disable MD041 -->
+<!-- markdownlint-configure-file {"MD033": {"allowed_elements": ["p", "img"]}} -->
+
+<p align="center">
+  <img src="assets/logo-animated.svg" alt="Evidence-first app builder. Docs and design before code." width="100%" />
+</p>
+
+# <img src="assets/icon.svg" alt="" width="28" height="28" align="top" /> evidence-first-app-builder
 
 A skill for AI coding agents (and people) that builds an app docs and design first, then code.
 
@@ -45,6 +52,13 @@ separates a passed design gate from still-unproven runtime behavior.
 | Design (FigCraft) | Study, direction, maps, file pages, build steps, journey manifest, handoff, brand strategy and logo methods, guardrails |
 | Web surface | Responsive matrix, i18n and RTL, multilingual SEO |
 | Iterating with the owner | Audit first, options with trade-offs, preview, feedback as spec |
+
+## Brand assets
+
+The [brand brief](assets/brand/brief.md) records the mark and palette decisions.
+Browse the [kit preview](assets/kit/preview_sheet_lite.html) for variants and exports.
+For GitHub Settings > Social preview, upload
+`assets/kit/social/github-social-preview.png`. Upload is manual, not set by this repo.
 
 ## License
 

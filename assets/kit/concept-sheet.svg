@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 708 340">
+<rect width="100%" height="100%" fill="#161b20"/>
+<text x="24" y="32" fill="#f3eee4" font-family="system-ui" font-size="16" font-weight="600">Concept sheet</text>
+<svg x="24" y="52" width="180" height="180" viewBox="0.0 0.0 512.0 512.0" overflow="hidden"><title>Evidence-first document gate</title><rect width="512" height="512" rx="96" fill="#161b20"/><path d="M128 360V112H352V224" fill="none" stroke="#f3eee4" stroke-width="48" stroke-linejoin="miter"/><path class="gate" d="M128 280L232 384L392 208" fill="none" stroke="#f3eee4" stroke-width="48" stroke-linejoin="miter"/></svg>
+<text x="24" y="248" fill="#f3eee4" font-size="11" font-weight="600">Threshold ★ recommended</text>
+<svg x="244" y="52" width="180" height="180" viewBox="0.0 0.0 512.0 512.0" overflow="hidden"><title>Evidence-first document gate</title><rect width="512" height="512" rx="96" fill="#161b20"/><path d="M144 112H304L384 192V400H144ZM304 112V192H384M208 288L248 328L328 240" fill="none" stroke="#f3eee4" stroke-width="36"/></svg>
+<text x="244" y="248" fill="#f3eee4" font-size="11" font-weight="600">Fold</text>
+<svg x="464" y="52" width="180" height="180" viewBox="0.0 0.0 512.0 512.0" overflow="hidden"><title>Evidence-first document gate</title><rect width="512" height="512" rx="96" fill="#161b20"/><path d="M208 112H112V400H208M304 112H400V400H304M192 256L240 304L328 208" fill="none" stroke="#f3eee4" stroke-width="40"/></svg>
+<text x="464" y="248" fill="#f3eee4" font-size="11" font-weight="600">Bracket</text>
+</svg>

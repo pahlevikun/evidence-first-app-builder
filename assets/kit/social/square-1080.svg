@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 1080">
+<rect width="100%" height="100%" fill="#161b20"/>
+<svg x="36" y="389" width="302" height="302" viewBox="0 0 512 512"><path d="M128 360V112H352V224" fill="none" stroke="#f3eee4" stroke-width="48"/><path d="M128 280L232 384L392 208" fill="none" stroke="#ed9864" stroke-width="48"/></svg>
+<text x="374" y="492" fill="#f3eee4" font-family="DejaVu Sans, sans-serif" font-size="38" font-weight="700">evidence-first</text>
+<text x="374" y="540" fill="#ed9864" font-family="DejaVu Sans, sans-serif" font-size="26" letter-spacing="3">app builder</text>
+<text x="374" y="588" fill="#a8b0b5" font-family="system-ui, sans-serif" font-size="19">Docs and design before code.</text>
+</svg>
