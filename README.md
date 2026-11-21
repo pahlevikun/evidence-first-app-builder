@@ -23,12 +23,14 @@ The skill is at [`skills/evidence-first-app-builder/SKILL.md`](skills/evidence-f
 | Section | Covers |
 |---|---|
 | Docs-and-design gate | What must exist before any feature code |
-| Planning | Doc order, plan template, sharpened brief, spikes, ADRs, feature study format, priority matrix |
+| Planning | Doc order, plan template, sharpened brief, spikes, ADRs, feature study format, priority matrix, market and form-factor study, naming and store listing |
 | Stack choice | How requirements pick the architecture |
 | Vertical slices | The eight things every feature needs to be done |
 | Checklists | Gate rules and evidence format |
 | Commits | Conventional, atomic, with a why |
-| Design (FigCraft) | Study, direction, maps, file pages, build steps, journey manifest, handoff, brand, guardrails |
+| Design (FigCraft) | Study, direction, maps, file pages, build steps, journey manifest, handoff, brand strategy and logo methods, guardrails |
+| Web surface | Responsive matrix, i18n and RTL, multilingual SEO |
+| Iterating with the owner | Audit first, options with trade-offs, preview, feedback as spec |
 
 ## License
 

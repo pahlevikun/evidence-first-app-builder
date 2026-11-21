@@ -241,6 +241,19 @@ Before the feature list, the study states the boundaries that shape every featur
 - Per phase: data flow, algorithm steps, edge cases, test fixtures, and the exact public calls the design will name.
 - The design's "core calls" column must use these exact names.
 
+### 5.10 Market, behaviour and form-factor study
+- Competitors **per region**, not one global list. Many categories are regional (local leaders, clones, OS built-ins). Table *Region | App | Maker country | Positioning | Take | Leave*.
+- Consumer behaviour per market in scope: what people actually do (batch size, share vs store, the chat app they share to, local payment rails, paper sizes, legal document formats). Each rule cites a source and a date.
+- Form factors: phone, tablet (split view / supporting pane, no stretched phone UI), foldables (cover screen = quick actions only, half-open mode, state survives fold and unfold), desktop (pointer hover, keyboard, resizable windows). Decide per form factor: ship, adapt or out of scope.
+- Findings go into the direction doc as decisions (*country variants*, *form-factor rules*), then into new feature, screen and journey rows. Research that changes nothing is cut.
+
+### 5.11 Naming and store listing (owner decides)
+1. **Shortlist 3-5 names**: easy to hear on a call, easy to spell, two syllables is ideal, meaning in the home market and neutral elsewhere. Check each against the app stores, domains and trademarks. Drop any that collide or that borrow a competitor's mark.
+2. **Competitor naming patterns**: table *App | Store name | Pattern* (literal, brand + keyword, keyword-first). Note what the top results actually use.
+3. **Keyword research**: table *Keyword | Searches/mo | Difficulty | Note*, with the source tool and date. Find the head keyword and the open, low-difficulty niches.
+4. **Fit the fields**: name and subtitle are capped (30 characters on both main stores). The name carries brand + head keyword (`Brand: Head Keyword`). The subtitle is for conversion and names the top use cases. The hidden keyword field (100 characters) takes the long tail. Count characters and never repeat a word across fields.
+5. Present one recommendation with rejected alternatives and why. Once the owner locks it, apply the name everywhere in one pass and commit it on its own.
+
 ## 6. Vertical slice recipe (every core feature)
 
 A feature is done only when all of these exist:
@@ -287,6 +300,7 @@ This file is the completion contract for the project.
 - Continue in `CHECKLIST-2.md` when scope grows. Tag steps by layer (core, sdk, tools, adr, design, ios, android, web, owner).
 - Country or legal rules cite an official source and a date. Say "compliant" only with validator evidence.
 - Every market or locale in scope is covered by every feature that has locale rules.
+- **Audit passes**: before a milestone, re-read every step 1..N against the repo. For each step, mark it done with evidence or reopen it, finish what is open, then commit semantically. Do not trust old ticks.
 
 ## 8. Commits
 
@@ -298,6 +312,8 @@ This file is the completion contract for the project.
 - Keep commits small (median about 2 files). Split a big working tree with a commit plan first: numbered *subject - files*, plus a "Not staged" list.
 - Commits carry the human author. No bot co-author trailers unless the owner wants them.
 - Never trust a piped or truncated gate. Check the real exit code.
+- Commit at natural checkpoints ("commit first") before starting the next idea, so each round of feedback is easy to review and revert.
+- "Atomic, covering all" means every eligible change ends up in a focused commit: split shared files with partial staging (`git add -p`, or patch files when non-interactive), one commit per locale catalog, layout fix, copy change and feature. Each commit builds. Leave unrelated or pre-existing changes and nested repos untouched, and list them. Do not push unless asked.
 
 ## 9. Design in depth (FigCraft)
 
@@ -316,6 +332,7 @@ Then write **Direction** as decisions before any drawing:
 - Anti-patterns rejected in review (e.g. a colour reserved for one signal used elsewhere, dense plain lists, overlapping cards).
 - Tokens table for Light and Dark with **computed contrast** next to each text pair.
 - Type scale per platform, shape, space, radius, elevation, motion tokens.
+- Market and form-factor rules from 5.10 (country variants, tablet, foldable, desktop) that change layouts.
 
 ### 9.2 Features, screens and journeys (written before drawing)
 - **Feature -> screen -> calls map**:
@@ -388,6 +405,8 @@ Evidence for each tick names the page, frame ids, counts (e.g. "19 iPhone frames
 - Rules for edits: edit the V copy, keep keys and node ids stable, add new states with new keys (never renumber), revalidate parent/child integrity, route destinations, reachability and preserved sources after every edit.
 - Asynchronous results (progress -> result) are not tappable successes. Record them in `async_transitions`. OS pickers, permissions and store sheets go in `native_handoffs`.
 - Large extensions (e.g. backup, trash, purchase recovery) get their own handoff file with a table *Screen | Node | Purpose* and the native outcome contract.
+- Wire hotspots on the real control (button, row, tab), never a whole-screen tap. Publish a table *Journey | Wired hotspots* so reviewers can check it.
+- After each pass, export the previews and open them for the owner. Do not just list file paths.
 
 ### 9.6 Handoff doc (`design/HANDOFF.md`)
 - Header: display name, app id, date, "read with" links, the file path, previews path, and "build from these frames, do not redraw them".
@@ -403,9 +422,26 @@ Evidence for each tick names the page, frame ids, counts (e.g. "19 iPhone frames
 - Coverage audit (`UI-COVERAGE.md`): what the file covers, gaps filled per pass as *Area | New or rebuilt UI*, and what a prototype cannot prove.
 
 ### 9.8 Brand
-- Brand assets come from a script: one geometry table plus `design/identity/tokens.json` generate icon, wordmark, splash and platform kits. Never hand-edit generated assets.
-- Offer 3 directions with a recommendation, marked "recommendation, not a decision". The owner chooses, then the name and identity are applied everywhere in the same pass (file, direction, handoff, product strings).
-- Studies of inspiration (e.g. splash screens) are tables *App | What it does | Take | Leave* with source and date.
+**Strategy first.** Before any mark, write: category, audience, product action, emotional promise, trust level, the core metaphor, and what the brand must avoid. Every symbol traces back to this. Never pick symbols at random.
+
+**Logo concept methods** (use one, or combine two at most):
+| Method | Idea | Example |
+|---|---|---|
+| Monogram + meaning | Initial shaped by a metaphor through cuts, folds or negative space | a letter folded from one strip of paper |
+| Product action | The main verb as an abstract mark | scan -> frame, protect -> boundary, convert -> switch |
+| Metaphor fusion | Two ideas reduced into one readable mark | frame + paper fold |
+| Negative space | Hidden arrow, protected centre, cut-out initial | |
+| Construction geometry | Circles, grids, diagonal cuts, modular blocks; show the construction | |
+
+Avoid: generic bolts and sparkles, random animals, fake crests, clipart, look-alikes of famous marks, inconsistent variants.
+
+**Directions.** Build 3 directions, each on light and dark plates, with app icons for every target platform. Compare them in a table *# | Idea | Good at | Limit*. Test each at 16 px and say what it resembles (category conventions, existing logos). Mark the pick "recommendation, not a decision", and commit nothing until the owner chooses.
+
+**Brand board** (one per direction, 3x3 by default): logo cover · construction · digital application (app icon, header, browser or terminal) · essence line · colour system · type specimen · physical application · image direction · system detail (chips, icons, pattern). Mix quiet and loud panels with sparse text, consistent gutters, and one idea per board. An overview sheet shows every icon and lockup together.
+
+**Generation.** Assets come from a script: one geometry table plus `design/identity/tokens.json` generates the icon, wordmark, splash and platform kits (iOS, iPadOS, macOS, Android adaptive and monochrome). Never hand-edit generated assets. A brand README holds usage rules, a file map and install steps. Validate every SVG, XML and JSON, and look at the renders yourself.
+
+Once chosen, apply the name and identity everywhere in the same pass (file, direction, handoff, product strings). Inspiration studies are tables *App | What it does | Take | Leave* with source and date.
 
 ### 9.9 Design guardrails
 - The design file is the single source of truth. Edit the canonical file, reopen it after outside edits, regenerate previews.
@@ -422,6 +458,23 @@ Evidence for each tick names the page, frame ids, counts (e.g. "19 iPhone frames
 - Tokens are exported to code, never retyped.
 - App checklist steps cite the frame id and a screenshot per theme and language.
 - Design commits use scopes like `docs(design)`, `feat(design)`, `fix(design)`, `feat(figcraft)`, `feat(brand)`, e.g. `docs(design): map each screen to its states and core calls in the handoff`, `fix(design): raise tertiary text contrast to 4.5 to 1 in both modes`.
+
+### 9.11 Web surface: responsive, i18n and SEO
+For a marketing site or a web app:
+- **Responsive matrix**: test widths from 280 px (flip phone) through 320, 768 and 1024 px to 1440 px, plus short landscape and unfolded foldables. Look for clipping, overlapping two-column breakpoints, nested scrollbars, and touch targets. State survives resize and rotation. Browser emulation is not hardware: say that hinges, notches and GPU still need a device check.
+- **i18n is more than a translated menu**: translated content, a localized crawlable URL per page (keep the existing default-language URLs), a real RTL document for RTL languages, a language chooser that keeps the page, query and anchor, and focus that returns to the trigger. No fixed heights, so longer languages can expand. Validate message keys and ICU format in CI. Machine-drafted translations are flagged for review by a native speaker.
+- **SEO**: a short title, and a meta description whose main message comes before truncation. Per-page metadata, canonical URLs, `hreflang` alternates, structured data (organisation or site name, web page), a sitemap with stable last-modified dates, and checks for duplicate metadata and broken internal links. Translate the title and description per locale.
+- **Local is not live**: say "applied locally, not deployed". Search results change only after deploy and recrawl (request indexing).
+
+## 9b. Iterating with the owner
+
+The loop that turns docs into a product the owner likes:
+1. **Audit first, no edits**: hierarchy, mobile, accessibility, navigation, conversion path. Return findings ranked by impact.
+2. **Options with trade-offs**: for an open idea, give 2-3 directions in a table *Direction | Interaction | Trade-off* and a recommendation. Ask which one before building.
+3. **Branch, build the first slice, run a preview** the owner can open and try. Tell them exactly what to try and what feedback you want.
+4. **Feedback is a spec**: apply the owner's own words for copy. When they say something got worse, restore what they liked first, then try again. Never trade away a liked element to make room for a new one.
+5. **Report precisely**: say what is done and what is not. If an earlier "done" covered only part of the ask, correct it explicitly.
+6. **Commit the round**, then suggest the next most valuable improvement (often removing or merging, not adding).
 
 ## 10. Writing style for docs
 
@@ -445,6 +498,8 @@ Evidence for each tick names the page, frame ids, counts (e.g. "19 iPhone frames
 - Unexpected errors surface as errors, never as "no result". A secondary engine's error is recorded and keeps the primary result.
 - Ask the owner for: product name, scope cuts, pricing, devices and accounts, legal sign-off, brand direction, repo creation.
 - Package managers: follow the owner's choice (for Node.js, pnpm).
+- Never deploy or overwrite a working tree that has unrelated work in progress. Isolate the fix first.
+- When asked to "study everything" (all competitors, all countries, all platforms), scope it to the markets and form factors in the brief and say so.
 
 ## 12. Kick-off checklist for a new repo
 
@@ -467,3 +522,7 @@ Evidence for each tick names the page, frame ids, counts (e.g. "19 iPhone frames
 - [ ] The FigCraft file has tokens as variables, components, every screen and state, previews, a critique and an accessibility pass, a handoff and a validated journey manifest.
 - [ ] Commits are atomic and semantic, and every gate is green.
 - [ ] Limits, gaps and deferred items are written down.
+- [ ] Competitors, behaviour and form factors were studied per market in scope, and the findings changed rows in the docs.
+- [ ] Name and store fields (if any) fit the character limits, and the owner locked them.
+- [ ] Brand directions were compared, the owner chose one, and the assets come from a script.
+- [ ] Web surfaces pass the responsive matrix, i18n key checks, and SEO checks. Anything local-only is labelled as not deployed.
