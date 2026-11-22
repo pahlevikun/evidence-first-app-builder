@@ -85,6 +85,11 @@ neon gradients. No icon-set artwork is included.
   Reduced motion forces the final still. No scripts or external fonts.
 - Kit exporters provide the output scaffolding. Their stock palette is replaced.
 - GitHub social preview upload is an owner action, not performed by this commit.
+- Native flat icons use assets/brand/icon-square.svg, an opaque full-bleed square
+  on the bg token. iOS applies its own mask. Run
+  `bash assets/brand/export-square-icons.sh` after the kit exporter to regenerate
+  the iOS catalog/touch and Android flat/legacy icons. Requires rsvg-convert and
+  Python 3. Adaptive foreground/background layers remain separate and unchanged.
 - Render review found the exporter omitted linked SVG images in social PNGs.
   Social SVGs now inline the mark. Its fill-only mono exporter also left coloured
   strokes, so both mono variants now use a single ink colour on contrasting paper.
